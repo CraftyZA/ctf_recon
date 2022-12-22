@@ -1,3 +1,5 @@
+#!/bin/sh
+
 sudo nmap -sS -T4 -A -p- $1 > tcp_$1.txt
 sudo nmap -sU -vv $1 > udp_$1.txt
 
