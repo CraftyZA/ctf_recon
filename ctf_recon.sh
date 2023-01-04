@@ -5,18 +5,20 @@ sudo nmap -sU -vv $1 > udp_$1.txt
 
 if grep -F "80/tcp"  tcp_$1.txt
     then
+    curl http://$1/ > index.txt
     echo "HTTP found running!"
     echo "Searching for directories"
     gobuster dir -u http://$1/ -w /usr/share/dirbuster/wordlists/directory-list-lowercase-2.3-medium.txt > gb_dir_$1.txt
     echo "Searching for vhosts"
     gobuster vhost -u http://$1/ -w /usr/share/wordlists/vhosts.txt |grep -v 302 > gb_vhosts_$1.txt
     echo "Looking for wordpress"
-    # if grep -F "" tcp_$1.txt
-    #     then
-    #     echo "Found Wordpress. running scans..."
-    #     echo "Enumerating users..."
-    #     wpscan -e u --url http://$1/ --force > wp_users.txt
-    #     echo "scanning wordpress"
+     if grep -F "content=\"WordPress" index.txt
+         then
+         echo "Found Wordpress. running scans..."
+         echo "Enumerating users..."
+         wpscan -e u --url http://$1/ --force > wp_users.txt
+         echo "scanning wordpress"
+         wpscan http://$1/ > wp_scan.txt
 
 
 else
